@@ -1,26 +1,72 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
-import "../../styles/home.css";
+import "../../styles/home.scss";
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.js";
 
-export const Home = () => {
+//COMPONENTS
+import Card from "../component/card.js";
+
+function Home() {
 	const { store, actions } = useContext(Context);
 
+	useEffect(() => {
+		actions.loadingData("planets");
+		actions.loadingData("people");
+	}, []);
+	console.log("PEOPLE", store.people);
+	console.log("PLANETS", store.planets);
+	console.log("FAVORITE", store.favorite);
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
+		<div>
+			<div className="container">
+				<div className="characters">
+					<h2 className="my-3 font-weight-bold">Characters</h2>
+					<div className="row row-cols-1 row-cols-md-3">
+						{store.people.map((character, index) => {
+							return (
+								<Card
+									key={index}
+									name={character.name}
+									labelText1={"Gender: "}
+									labelText2={"Eye Color: "}
+									labelText3={"Hair Color: "}
+									text1={character.gender}
+									text2={character.eye_color}
+									text3={character.hair_color}
+									id={index}
+									section="character"
+									item={character}
+								/>
+							);
+						})}
+					</div>
+				</div>
+				<div className="container">
+					<div className="planets">
+						<h2 className="my-3 font-weight-bold">Planets</h2>
+						<div className="row row-cols-1 row-cols-md-3">
+							{store.planets.map((planets, index) => {
+								return (
+									<Card
+										key={index}
+										name={planets.name}
+										labelText1={"Population: "}
+										labelText2={"Terrain: "}
+										text1={planets.population}
+										text2={planets.terrain}
+										id={index}
+										section="planets"
+										item={planets}
+									/>
+								);
+							})}
+						</div>
+					</div>
+				</div>
 			</div>
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://github.com/4GeeksAcademy/react-flask-hello/tree/95e0540bd1422249c3004f149825285118594325/docs">
-					Read documentation
-				</a>
-			</p>
 		</div>
 	);
-};
+}
+export default Home;

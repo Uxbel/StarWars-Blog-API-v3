@@ -1,46 +1,32 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			people: [],
+			planets: [],
+			favorite: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			loadingData: str => {
+				fetch("https://swapi.dev/api/" + str + "/")
+					.then(res => res.json())
+					.then(data => setStore({ [str]: data.results }))
+					.catch(error => console.log(error));
 			},
-
-			getMessage: () => {
-				// fetching data from the backend
-				fetch(process.env.BACKEND_URL + "/api/hello")
-					.then(resp => resp.json())
-					.then(data => setStore({ message: data.message }))
-					.catch(error => console.log("Error loading message from backend", error));
-			},
-			changeColor: (index, color) => {
-				//get the store
+			addFavorite: item => {
 				const store = getStore();
+				const validate = store.favorite.includes(item);
+				if (!validate) {
+					setStore({ favorite: [...store.favorite, item] });
+				}
+			},
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
+			deleteFavorite: name => {
+				const store = getStore();
+				const updatedList = [...store.favorite];
+				const isMyName = element => element.name == name;
+				const index = updatedList.findIndex(isMyName);
+				updatedList.splice(index, 1);
+				setStore({ favorite: [...updatedList] });
 			}
 		}
 	};
