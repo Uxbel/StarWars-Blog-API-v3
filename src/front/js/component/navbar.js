@@ -2,9 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import starWars from "../../img/star-wars.png";
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js";
+import * as bootstrap from "bootstrap";
 import { element } from "prop-types";
 
 export const Navbar = () => {
@@ -25,7 +23,7 @@ export const Navbar = () => {
 					<button
 						type="button"
 						className="btn btn-lg btn-dark rounded-pill dropdown-toggle"
-						data-toggle="dropdown"
+						data-bs-toggle="dropdown"
 						aria-haspopup="true"
 						aria-expanded="false">
 						Favorites &nbsp;

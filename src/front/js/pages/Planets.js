@@ -1,9 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import imgSize from "../../img/imgSize.png";
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js";
+
 
 export const Planets = () => {
 	return (

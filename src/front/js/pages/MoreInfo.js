@@ -3,9 +3,6 @@ import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import imgSize800x600 from "../../img/imgSize800x600.png";
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js";
 
 export const MoreInfo = () => {
 	const { store, actions } = useContext(Context);

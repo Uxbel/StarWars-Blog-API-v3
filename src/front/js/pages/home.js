@@ -1,9 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.scss";
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js";
 
 //COMPONENTS
 import Card from "../component/card.js";

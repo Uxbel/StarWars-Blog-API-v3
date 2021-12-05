@@ -2,9 +2,6 @@ import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import imgSize from "../../img/imgSize.png";
 import { Context } from "../store/appContext";
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js";
 import { Link } from "react-router-dom";
 
 function Card(props) {
