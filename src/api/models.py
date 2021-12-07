@@ -28,7 +28,7 @@ class People(db.Model):
     birth_year = db.Column(db.String(50))
     gender = db.Column(db.String(50))
     name = db.Column(db.String(50), nullable=False)
-    img_url: db.Column(db.String)      
+    img_url = db.Column(db.String)      
 
     def __repr__(self):
         return '<People %r>' % self.id
@@ -64,7 +64,7 @@ class Planet(db.Model):
     terrain = db.Column(db.String(50))
     surface_water = db.Column(db.String(50))
     name = db.Column(db.String(50), nullable=False)
-    img_url: db.Column(db.String)
+    img_url = db.Column(db.String)
 
     def __repr__(self):
         return '<Planet %r>' % self.id
@@ -93,15 +93,15 @@ class Planet(db.Model):
  
 class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
 
     user = db.relationship("User")
 
-    people_id = db.Column(db.Integer, db.ForeignKey('people.id', ondelete='CASCADE'))
+    people_id = db.Column(db.Integer(), db.ForeignKey('people.id', ondelete='CASCADE'))
 
     people = db.relationship("People")
 
-    planet_id = db.Column(db.Integer, db.ForeignKey('planet.id', ondelete='CASCADE'))
+    planet_id = db.Column(db.Integer(), db.ForeignKey('planet.id', ondelete='CASCADE'))
 
     planet = db.relationship("Planet")
 
