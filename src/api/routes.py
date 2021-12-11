@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, People, Planet, Favorites
+from api.models import db, User, People, Planet, FavoritesPeople, FavoritesPlanet
 from api.utils import generate_sitemap, APIException
 
 api = Blueprint('api', __name__)
@@ -25,10 +25,10 @@ def get_people():
     
     return jsonify(people_serialize), 200
 
-@api.route('/people/<int:people_id>', methods=['GET']) # No funciona
+@api.route('/people/<int:id>', methods=['GET']) # Funciona (Revisar los siguientes)
 def get_people_by_id(id):
 
-    people = People.query.filter_by(people_id=id).first() # trae un registro según el id
+    people = People.query.filter_by(id=id).first() # trae un registro según el id
     
     return jsonify(people.serialize()), 200
 
@@ -40,53 +40,60 @@ def get_planets():
     
     return jsonify(planets_serialize), 200
 
-@api.route('/planets/<int:planet_id>', methods=['GET']) # no funciona
+@api.route('/planet/<int:id>', methods=['GET']) # funciona
 def get_planet_by_id(id):
 
-    planet = Planet.query.filter_by(planet_id=id).first() # trae un registro según el id
+    planet = Planet.query.filter_by(id=id).first() # trae un registro según el id
     
     return jsonify(planet.serialize()), 200
 
 
-@api.route('/users/<int:user_id>/favorites', methods=['GET']) # no funciona
+@api.route('/users/<int:id>/favorites', methods=['GET']) # Revisar
 def get_favorites_by_user(id):
+    favorites = []
 
-    favorites = Favorites.query.filter_by(user_id=id) # trae todo los favoritos de un usuario según su id
-    favorites_serialize = list(map(lambda x:x.serialize(),favorites)) # Devuelve un diccionario por cada favorito (serialize del models)
+    favoritesPeople = FavoritesPeople.query.filter_by(id=id) # trae todo los favoritos de un usuario según su id
+    favoritesPlanet = FavoritesPlanet.query.filter_by(id=id) # trae todo los favoritos de un usuario según su id
+    for people in favoritesPeople: 
+        favorites.append(people.id)
+    for planet in favoritesPlanet: 
+        favorites.append(planet.id)
     
-    return jsonify(favorites_serialize), 200
+    #favorites_serialize = list(map(lambda x:x.serialize(),favorites)) # Devuelve un diccionario por cada favorito (serialize del models)
+    
+    return jsonify(favorites), 200
 
-@api.route('/favorite/<int:user_id>/planet/<int:planet_id>', methods=['POST'])
+@api.route('/favorite/<int:user_id>/planet/<int:planet_id>', methods=['POST']) # funciona
 def post_planet_favorite(user_id,planet_id):
 
-    planet_favorite = Favorites(planets_id=planets_id,user_id=user_id) # Relaciona un usario con un planeta para almacenarlo en favoritos
+    planet_favorite = FavoritesPlanet(planet_id=planet_id,user_id=user_id) # Relaciona un usario con un planeta para almacenarlo en favoritos
     db.session.add(planet_favorite)
     db.session.commit()
     return jsonify({"Body_response":"Planeta agregado con éxito"}), 200
 
-@api.route('/favorite/<int:user_id>/people/<int:people_id>', methods=['POST'])
+@api.route('/favorite/<int:user_id>/people/<int:people_id>', methods=['POST']) # funciona
 def post_people_favorite(user_id,people_id):
 
-    people_favorite = Favorites(people_id=people_id, user_id=user_id) # Relaciona un usario con un planeta para almacenarlo en favoritos
+    people_favorite = FavoritesPeople(people_id=people_id, user_id=user_id) # Relaciona un usario con un planeta para almacenarlo en favoritos
     db.session.add(people_favorite)
     db.session.commit()
     return jsonify({"Body_response":"Personaje agregado con éxito"}), 200
 
 
-@api.route('/favorite/<int:user_id>/planet/<int:planet_id>', methods=['DELETE'])
+@api.route('/favorite/<int:user_id>/planet/<int:planet_id>', methods=['DELETE']) #funciona
 def delete_planet_favorites_by_user(user_id,planet_id):
 
-    delete_planet_favorites = Favorites.query.filter_by(user_id=user_id, planet_id=planet_id).first() # elimina el favorito planeta según el id del usuario
+    delete_planet_favorites = FavoritesPlanet.query.filter_by(user_id=user_id, planet_id=planet_id).first() # elimina el favorito planeta según el id del usuario
     db.session.delete(delete_planet_favorites)
     db.session.commit()
+    
+    return jsonify(delete_planet_favorites.serialize()), 200
 
-    return jsonify(delete_planet_favorites), 200
-
-@api.route('/favorite/<int:user_id>/people/<int:people_id>', methods=['DELETE'])
+@api.route('/favorite/<int:user_id>/people/<int:people_id>', methods=['DELETE']) 
 def delete_people_favorites_by_user(user_id,people_id):
 
-    delete_people_favorites = Favorites.query.filter_by(user_id=user_id, people_id=people_id).first() # elimina el favorito personaje según el id del usuario
+    delete_people_favorites = FavoritesPeople.query.filter_by(user_id=user_id, people_id=people_id).first() # elimina el favorito personaje según el id del usuario
     db.session.delete(delete_people_favorites)
     db.session.commit()
 
-    return jsonify(delete_people_favorites), 200
+    return jsonify(delete_people_favorites.serialize()), 200

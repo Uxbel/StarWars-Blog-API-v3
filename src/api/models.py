@@ -89,11 +89,34 @@ class Planet(db.Model):
         db.session.add(self)   
         db.session.commit()
 
+
+class FavoritesPlanet(db.Model):
     
- 
-class Favorites(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    user_id = db.Column(db.Integer(), primary_key=True)
+
+    user = db.relationship("User")
+
+    planet_id = db.Column(db.Integer(), db.ForeignKey('planet.id', ondelete='CASCADE'))
+
+    planet = db.relationship("Planet")
+
+    def __repr__(self):
+        return '<FavoritesPlanet %r>' % self.id
+
+    def serialize(self):
+        return {
+            "user_id": self.user_id,
+            "planet_id": self.planet_id
+            # do not serialize the password, its a security breach
+        }
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class FavoritesPeople(db.Model):
+    
+    user_id = db.Column(db.Integer(), primary_key=True)
 
     user = db.relationship("User")
 
@@ -101,19 +124,13 @@ class Favorites(db.Model):
 
     people = db.relationship("People")
 
-    planet_id = db.Column(db.Integer(), db.ForeignKey('planet.id', ondelete='CASCADE'))
-
-    planet = db.relationship("Planet")
-
     def __repr__(self):
-        return '<Favorites %r>' % self.id
+        return '<FavoritesPeople %r>' % self.id
 
     def serialize(self):
         return {
-            "id": self.id,
             "user_id": self.user_id,
-            "people_id": self.people_id,
-            "planet_id": self.planet_id
+            "people_id": self.people_id
             # do not serialize the password, its a security breach
         }
 
