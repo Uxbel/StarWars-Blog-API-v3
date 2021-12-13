@@ -92,11 +92,11 @@ class Planet(db.Model):
 
 class FavoritesPlanet(db.Model):
     
-    user_id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), primary_key=True)
 
     user = db.relationship("User")
 
-    planet_id = db.Column(db.Integer(), db.ForeignKey('planet.id', ondelete='CASCADE'))
+    planet_id = db.Column(db.Integer(), db.ForeignKey('planet.id'), primary_key=True)
 
     planet = db.relationship("Planet")
 
@@ -116,11 +116,11 @@ class FavoritesPlanet(db.Model):
 
 class FavoritesPeople(db.Model):
     
-    user_id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), primary_key=True)
 
     user = db.relationship("User")
 
-    people_id = db.Column(db.Integer(), db.ForeignKey('people.id', ondelete='CASCADE'))
+    people_id = db.Column(db.Integer(), db.ForeignKey('people.id'), primary_key=True)
 
     people = db.relationship("People")
 
