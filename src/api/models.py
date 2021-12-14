@@ -101,7 +101,7 @@ class FavoritesPlanet(db.Model):
     planet = db.relationship("Planet")
 
     def __repr__(self):
-        return '<FavoritesPlanet %r>' % self.id
+        return '<FavoritesPlanet %r>' % self.user_id
 
     def serialize(self):
         return {
@@ -125,7 +125,7 @@ class FavoritesPeople(db.Model):
     people = db.relationship("People")
 
     def __repr__(self):
-        return '<FavoritesPeople %r>' % self.id
+        return '<FavoritesPeople %r>' % self.user_id
 
     def serialize(self):
         return {
